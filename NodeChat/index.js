@@ -12,6 +12,7 @@ var errorHandlers = require('./middleware/errorhandlers');
 var log = require('./middleware/log');
 var partials = require('express-partials');
 var config = require('./config');
+var io = require('./socket.io');
 
 app.set('view engine', 'ejs');
 app.set('view options', {defaultLayout: 'layout'});
@@ -47,5 +48,8 @@ app.get('/error', function(req, res, next) {
 app.use(errorHandlers.error);
 app.use(errorHandlers.notFound);
 
-app.listen(config.port);
-console.log("App running on port 3000");
+// app.listen(config.port);
+// console.log("App running on port 3000");
+
+var server = app.listen(config.port);
+io.startIo(server);
