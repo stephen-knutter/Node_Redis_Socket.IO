@@ -1,12 +1,11 @@
 var config = {
   port: 3000,
   secret: 'secret',
-  redisPort: 6379,
-  redisHost: 'localhost',
+  redisUrl: 'redis://localhost',
   routes: {
-    login: '/account/login',
-    logout: '/account/logout'
+    login: '/login',
+    logout: '/logout'
   }
-}
+};
 
 module.exports = config;

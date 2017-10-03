@@ -1,16 +1,17 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Socket.IO Namespaces</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script type="text/javascript" src="socket.io.js"></script>
-    <style>
-      .areas { float: left; width: 50%; }
+    <title>Socket.io Ping Pong</title>
+    <script type="text/javascript" src="/socket.io.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+    <style media="screen">
+      .areas {float: left; width: 50%;}
     </style>
   </head>
   <body>
-    <div class="input">
+    <div>
       <input type="text" id="username" />
     </div>
     <div class="areas default">
@@ -47,6 +48,7 @@
         </ul>
       </div>
     </div>
+
     <script type="text/javascript">
       var socket = io.connect('http://localhost:4000');
       var vip = io.connect('http://localhost:4000/vip');
@@ -59,37 +61,32 @@
         return '<li>' + user.username + '<button class="private_ping" data-socket="' + user.socket + '">Ping Me</button></li>';
       }
 
-      function wireEvents(area, room) {
+      function wireEvents(area, socketio) {
         var users = area.find('.users');
         var events = area.find('.events');
 
         area.on('click', function(e) {
           if (e.target.className === 'join') {
-            socket.emit('join', {username: $username.val(), room: room});
+            socketio.emit('join', {username: $username.val()});
           } else if (e.target.className === 'ping') {
-            socket.emit('ping', {room: room});
+            socketio.emit('ping');
           } else if (e.target.className === 'private_ping') {
-            socket.emit('privatePing', {socket: e.target.getAttribute('data-socket'), room: room});
+            socketio.emit('privatePing', {socket: e.target.getAttribute('data-socket')});
           }
         });
 
-        socket.on('join', function(user) {
-          if (user.room === room)
-            users.append(createButton(user));
+        socketio.on('join', function(user) {
+          users.append(createButton(user));
         });
-        socket.on('ping', function(user) {
-          if (user.room === room) {
-            if (user.priv === undefined) {
-              events.append('<li>Ping from ' + user.username + '</li>');
-            } else {
-              events.append('<li>Ping from ' + user.username + ' sent directly to you.</li>')
-            }
+
+        socketio.on('ping', function(user) {
+          if (user.priv === undefined) {
+            events.append('<li>Ping from ' + user.username + '</li>');
+          } else {
+            events.append('<li>Ping from ' + user.username + ' sent privately</li>');
           }
         });
       }
-
-      wireEvents(defaultArea, '');
-      wireEvents(vipArea, 'vip');
     </script>
   </body>
 </html>

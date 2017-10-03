@@ -1,8 +1,8 @@
 exports.notFound = function notFound(req, res, next) {
-  res.status().send(404, 'You seem lost. You must hav taken a wrong turn.');
+  res.status(404).send('You seem lost. You must have taken a wrong turn somewhere');
 }
 
 exports.error = function error(err, req, res, next) {
-  console.log(err);
-  res.status().send(500, 'Something broke. What did you do?');
+  console.error(err);
+  res.status(500).send('Ooops, something broke');
 }
