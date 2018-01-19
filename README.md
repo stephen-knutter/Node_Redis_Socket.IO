@@ -1,1 +1,1 @@
-### Nodejs, Redis, & Socket.IO apps
+### Nodejs, Redis, & Socket.IO applications
